@@ -2,1656 +2,800 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#08080d">
 <title>Exry Hub • Tools</title>
-<meta name="description" content="Exry Hub - Lua Obfuscator, Video Downloader & AI Generator">
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --bg: #07070b;
-    --panel: #0d0d13;
-    --panel2: #12121a;
-    --border: rgba(255,255,255,.09);
-    --text: #ffffff;
-    --muted: #8c8c9b;
-    --primary: #8b5cf6;
-    --primary2: #6366f1;
-}
-
-body {
-    min-height: 100vh;
-    background:
-        radial-gradient(circle at 20% 10%, rgba(124,58,237,.14), transparent 30%),
-        radial-gradient(circle at 90% 80%, rgba(59,130,246,.10), transparent 30%),
-        var(--bg);
-    color: var(--text);
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-/* SIDEBAR */
-
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 250px;
-    height: 100vh;
-    padding: 22px 15px;
-    background: rgba(9,9,14,.88);
-    border-right: 1px solid var(--border);
-    backdrop-filter: blur(18px);
-    z-index: 1000;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    padding: 8px 10px 28px;
-}
-
-.logo-icon {
-    width: 40px;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--primary), var(--primary2));
-    font-weight: 900;
-    box-shadow: 0 10px 30px rgba(124,58,237,.25);
-}
-
-.logo-text {
-    font-size: 18px;
-    font-weight: 800;
-}
-
-.logo-text span {
-    color: #9f8cff;
-}
-
-.nav-title {
-    padding: 0 12px;
-    margin-bottom: 8px;
-    color: #626272;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.4px;
-}
-
-.nav-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 14px;
-    margin-bottom: 6px;
-    border: 0;
-    border-radius: 12px;
-    background: transparent;
-    color: #a1a1af;
-    cursor: pointer;
-    text-align: left;
-    transition: .2s;
-}
-
-.nav-btn:hover {
-    background: rgba(255,255,255,.05);
-    color: white;
-}
-
-.nav-btn.active {
-    background: linear-gradient(
-        135deg,
-        rgba(139,92,246,.22),
-        rgba(99,102,241,.12)
-    );
-    color: white;
-    border: 1px solid rgba(139,92,246,.2);
-}
-
-.nav-icon {
-    width: 25px;
-    text-align: center;
-    font-size: 17px;
-}
-
-/* MAIN */
-
-.main {
-    margin-left: 250px;
-    padding: 35px;
-    max-width: 1450px;
-}
-
-.mobile-header {
-    display: none;
-}
-
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-.hero {
-    margin-bottom: 25px;
-}
-
-.badge {
-    display: inline-flex;
-    padding: 7px 11px;
-    margin-bottom: 14px;
-    border: 1px solid rgba(139,92,246,.25);
-    border-radius: 999px;
-    background: rgba(139,92,246,.08);
-    color: #b5a1ff;
-    font-size: 11px;
-    font-weight: 700;
-}
-
-h1 {
-    font-size: clamp(30px, 5vw, 52px);
-    line-height: 1.05;
-    margin-bottom: 12px;
-}
-
-.gradient {
-    background: linear-gradient(90deg, #a78bfa, #60a5fa);
-    -webkit-background-clip: text;
-    color: transparent;
-}
-
-.hero p {
-    max-width: 650px;
-    color: var(--muted);
-    line-height: 1.7;
-}
-
-/* CARDS */
-
-.tool-card {
-    padding: 22px;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    background: rgba(15,15,22,.78);
-    box-shadow: 0 20px 50px rgba(0,0,0,.18);
-}
-
-.card-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 18px;
-}
-
-.card-title h2 {
-    font-size: 17px;
-}
-
-.card-title p {
-    margin-top: 4px;
-    color: var(--muted);
-    font-size: 12px;
-}
-
-/* TEXTAREA */
-
-textarea,
-input,
-select {
-    width: 100%;
-    outline: none;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: #09090e;
-    color: white;
-    font-family: inherit;
-}
-
-textarea {
-    min-height: 270px;
-    padding: 15px;
-    resize: vertical;
-    font-family: Consolas, monospace;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-input {
-    padding: 14px;
-}
-
-select {
-    padding: 13px;
-}
-
-textarea:focus,
-input:focus,
-select:focus {
-    border-color: rgba(139,92,246,.6);
-}
-
-/* BUTTONS */
-
-button {
-    font-family: inherit;
-}
-
-.primary-btn {
-    border: 0;
-    border-radius: 11px;
-    padding: 12px 18px;
-    background: linear-gradient(135deg, var(--primary), var(--primary2));
-    color: white;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 8px 25px rgba(99,102,241,.2);
-    transition: .2s;
-}
-
-.primary-btn:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.08);
-}
-
-.secondary-btn {
-    border: 1px solid var(--border);
-    border-radius: 11px;
-    padding: 12px 18px;
-    background: rgba(255,255,255,.05);
-    color: white;
-    cursor: pointer;
-}
-
-.secondary-btn:hover {
-    background: rgba(255,255,255,.09);
-}
-
-.button-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-    margin-top: 13px;
-}
-
-/* RESULT */
-
-.result-box {
-    margin-top: 20px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: rgba(255,255,255,.025);
-}
-
-.result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-}
-
-.result-title {
-    font-size: 14px;
-    font-weight: 700;
-}
-
-#resultStatus {
-    display: block;
-    margin-top: 4px;
-    color: #4ade80;
-    font-size: 10px;
-}
-
-.result-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.action-btn {
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 8px 12px;
-    background: rgba(255,255,255,.05);
-    color: white;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.action-btn:hover {
-    background: rgba(255,255,255,.1);
-}
-
-#obfuscatedResult {
-    min-height: 300px;
-    border: 0;
-    border-radius: 0;
-}
-
-/* GRID */
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-top: 25px;
-}
-
-.feature {
-    padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: rgba(255,255,255,.025);
-}
-
-.feature-icon {
-    font-size: 25px;
-    margin-bottom: 12px;
-}
-
-.feature h3 {
-    margin-bottom: 7px;
-    font-size: 14px;
-}
-
-.feature p {
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.6;
-}
-
-/* DOWNLOAD */
-
-.download-form {
-    display: flex;
-    gap: 10px;
-}
-
-.download-form input {
-    flex: 1;
-}
-
-.preview {
-    display: none;
-    margin-top: 18px;
-    padding: 18px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: rgba(255,255,255,.03);
-}
-
-.preview.show {
-    display: block;
-}
-
-.preview h3 {
-    margin-bottom: 8px;
-}
-
-.preview p {
-    color: var(--muted);
-    font-size: 12px;
-}
-
-/* AI */
-
-.ai-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-
-.ai-result {
-    min-height: 220px;
-    margin-top: 15px;
-    padding: 15px;
-    border: 1px solid var(--border);
-    border-radius: 13px;
-    background: #09090e;
-    color: #ddd;
-    white-space: pre-wrap;
-    line-height: 1.7;
-    font-size: 13px;
-}
-
-/* TOAST */
-
-#toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 99999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    pointer-events: none;
-}
-
-.toast {
-    min-width: 270px;
-    max-width: 370px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 14px;
-    background: rgba(17,17,24,.96);
-    backdrop-filter: blur(18px);
-    box-shadow: 0 15px 40px rgba(0,0,0,.4);
-    pointer-events: auto;
-    animation: toastIn .3s ease forwards;
-}
-
-.toast.hide {
-    animation: toastOut .3s ease forwards;
-}
-
-.toast-icon {
-    width: 32px;
-    height: 32px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-.toast-success .toast-icon {
-    background: rgba(34,197,94,.15);
-    color: #4ade80;
-}
-
-.toast-error .toast-icon {
-    background: rgba(239,68,68,.15);
-    color: #f87171;
-}
-
-.toast-warning .toast-icon {
-    background: rgba(245,158,11,.15);
-    color: #fbbf24;
-}
-
-.toast-info .toast-icon {
-    background: rgba(59,130,246,.15);
-    color: #60a5fa;
-}
-
-.toast-content {
-    flex: 1;
-}
-
-.toast-title {
-    margin-bottom: 2px;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.toast-message {
-    color: #888894;
-    font-size: 11px;
-    line-height: 1.4;
-}
-
-.toast-close {
-    border: 0;
-    background: transparent;
-    color: #777;
-    cursor: pointer;
-    font-size: 18px;
-}
-
-@keyframes toastIn {
-    from {
-        opacity: 0;
-        transform: translateX(35px) scale(.96);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
-}
-
-@keyframes toastOut {
-    from {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
-
-    to {
-        opacity: 0;
-        transform: translateX(35px) scale(.96);
-    }
-}
-
-/* MOBILE */
-
-@media (max-width: 850px) {
-
-    .sidebar {
-        transform: translateX(-100%);
-        transition: .25s;
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .main {
-        margin-left: 0;
-        padding: 20px;
-        padding-top: 75px;
-    }
-
-    .mobile-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 15px;
-        background: rgba(7,7,11,.9);
-        border-bottom: 1px solid var(--border);
-        backdrop-filter: blur(15px);
-        z-index: 900;
-    }
-
-    .menu-btn {
-        width: 38px;
-        height: 38px;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        background: rgba(255,255,255,.05);
-        color: white;
-        cursor: pointer;
-    }
-
-    .mobile-logo {
-        font-weight: 800;
-    }
-
-    .grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 600px) {
-
-    .main {
-        padding: 18px;
-        padding-top: 75px;
-    }
-
-    .tool-card {
-        padding: 15px;
-    }
-
-    .result-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .result-actions {
-        width: 100%;
-    }
-
-    .action-btn {
-        flex: 1;
-    }
-
-    .download-form {
-        flex-direction: column;
-    }
-
-    .ai-options {
-        grid-template-columns: 1fr;
-    }
-
-    #toast-container {
-        left: 15px;
-        right: 15px;
-        top: 15px;
-    }
-
-    .toast {
-        width: 100%;
-        min-width: 0;
-    }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#07070b;
+--panel:#0e0e15;
+--panel2:#12121b;
+--border:rgba(255,255,255,.09);
+--text:#fff;
+--muted:#8d8d9d;
+--primary:#8b5cf6;
+--primary2:#6366f1;
+}
+body{
+background:
+radial-gradient(circle at 15% 10%,rgba(139,92,246,.14),transparent 28%),
+radial-gradient(circle at 90% 80%,rgba(59,130,246,.10),transparent 30%),
+var(--bg);
+color:var(--text);
+font-family:Inter,Arial,sans-serif;
+min-height:100vh;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.sidebar{
+position:fixed;
+left:0;top:0;
+width:245px;height:100vh;
+padding:20px 14px;
+background:rgba(8,8,13,.9);
+border-right:1px solid var(--border);
+backdrop-filter:blur(18px);
+z-index:1000;
+}
+.logo{
+display:flex;
+align-items:center;
+gap:11px;
+padding:8px 10px 30px;
+}
+.logoIcon{
+width:40px;height:40px;
+display:grid;place-items:center;
+border-radius:12px;
+font-weight:900;
+background:linear-gradient(135deg,var(--primary),var(--primary2));
+}
+.logoText{font-size:18px;font-weight:800}
+.logoText span{color:#a78bfa}
+.navLabel{
+font-size:10px;
+letter-spacing:1.5px;
+color:#5e5e6c;
+padding:0 12px 9px;
+text-transform:uppercase;
+}
+.nav{
+width:100%;
+padding:12px 13px;
+margin-bottom:6px;
+border:1px solid transparent;
+border-radius:12px;
+background:transparent;
+color:#9898a7;
+text-align:left;
+transition:.2s;
+}
+.nav:hover{background:rgba(255,255,255,.05);color:#fff}
+.nav.active{
+background:rgba(139,92,246,.13);
+border-color:rgba(139,92,246,.22);
+color:#fff;
+}
+.main{
+margin-left:245px;
+padding:34px;
+max-width:1450px;
+}
+.mobile{
+display:none;
+}
+.page{display:none}
+.page.active{display:block}
+.hero{margin-bottom:24px}
+.badge{
+display:inline-block;
+padding:7px 11px;
+border-radius:999px;
+background:rgba(139,92,246,.09);
+border:1px solid rgba(139,92,246,.2);
+color:#b8a5ff;
+font-size:10px;
+font-weight:700;
+letter-spacing:.8px;
+margin-bottom:14px;
+}
+h1{
+font-size:clamp(32px,5vw,54px);
+line-height:1.03;
+margin-bottom:12px;
+}
+.gradient{
+background:linear-gradient(90deg,#a78bfa,#60a5fa);
+-webkit-background-clip:text;
+color:transparent;
+}
+.hero p{
+max-width:700px;
+color:var(--muted);
+line-height:1.7;
+}
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+}
+.card{
+border:1px solid var(--border);
+background:rgba(14,14,21,.8);
+border-radius:18px;
+padding:20px;
+box-shadow:0 20px 50px rgba(0,0,0,.18);
+}
+.featureIcon{
+font-size:25px;
+margin-bottom:12px;
+}
+.card h3{font-size:15px;margin-bottom:7px}
+.card p{
+font-size:12px;
+line-height:1.6;
+color:var(--muted);
+}
+.tool{
+padding:20px;
+border:1px solid var(--border);
+border-radius:18px;
+background:rgba(14,14,21,.82);
+}
+.toolHead{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+margin-bottom:15px;
+}
+.toolHead h2{font-size:17px}
+.toolHead p{
+font-size:12px;
+color:var(--muted);
+margin-top:4px;
+}
+textarea,input,select{
+width:100%;
+border:1px solid var(--border);
+border-radius:12px;
+background:#09090e;
+color:#fff;
+outline:none;
+}
+textarea{
+min-height:280px;
+padding:15px;
+resize:vertical;
+font-family:Consolas,monospace;
+font-size:13px;
+line-height:1.6;
+}
+input,select{padding:13px}
+textarea:focus,input:focus,select:focus{
+border-color:rgba(139,92,246,.6);
+}
+.row{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-top:12px;
+}
+.primary,.secondary,.small{
+border-radius:10px;
+padding:11px 16px;
+transition:.2s;
+}
+.primary{
+border:0;
+background:linear-gradient(135deg,var(--primary),var(--primary2));
+color:#fff;
+font-weight:700;
+}
+.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.secondary,.small{
+border:1px solid var(--border);
+background:rgba(255,255,255,.05);
+color:#fff;
+}
+.secondary:hover,.small:hover{background:rgba(255,255,255,.1)}
+.result{
+margin-top:18px;
+overflow:hidden;
+border:1px solid var(--border);
+border-radius:15px;
+}
+.resultHead{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+padding:13px 15px;
+border-bottom:1px solid var(--border);
+}
+.resultTitle{font-size:13px;font-weight:700}
+.status{
+display:block;
+font-size:10px;
+color:#4ade80;
+margin-top:3px;
+}
+.resultActions{
+display:flex;
+gap:7px;
+}
+#obfuscatedResult{border:0;border-radius:0;min-height:300px}
+.downloadRow{
+display:flex;
+gap:9px;
+}
+.downloadRow input{flex:1}
+.chat{
+height:calc(100vh - 270px);
+min-height:480px;
+display:flex;
+flex-direction:column;
+}
+.messages{
+flex:1;
+overflow-y:auto;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+.msg{
+max-width:82%;
+padding:11px 14px;
+border-radius:14px;
+font-size:13px;
+line-height:1.6;
+white-space:pre-wrap;
+word-break:break-word;
+}
+.msg.user{
+align-self:flex-end;
+background:linear-gradient(135deg,#6040ad,#4f46b8);
+}
+.msg.ai{
+align-self:flex-start;
+background:#15151e;
+border:1px solid var(--border);
+}
+.msg.system{
+align-self:center;
+color:#777;
+font-size:11px;
+}
+.typing{
+display:none;
+padding:0 15px 10px;
+color:#858592;
+font-size:11px;
+}
+.chatInput{
+display:flex;
+gap:9px;
+padding:12px;
+border-top:1px solid var(--border);
+}
+.chatInput textarea{
+min-height:48px;
+height:48px;
+resize:none;
+font-family:inherit;
+}
+.chatInput button{width:110px}
+.chatTools{
+display:flex;
+gap:7px;
+padding:9px 12px 0;
+}
+.chatTools button{
+font-size:11px;
+padding:7px 10px;
+}
+#toast-container{
+position:fixed;
+top:18px;
+right:18px;
+z-index:99999;
+display:flex;
+flex-direction:column;
+gap:9px;
+}
+.toast{
+min-width:270px;
+max-width:380px;
+display:flex;
+align-items:center;
+gap:10px;
+padding:13px;
+background:rgba(18,18,26,.97);
+border:1px solid var(--border);
+border-radius:13px;
+box-shadow:0 15px 40px rgba(0,0,0,.4);
+animation:tin .3s ease;
+}
+.toast.hide{animation:tout .3s ease forwards}
+.toastIcon{
+width:30px;height:30px;
+display:grid;place-items:center;
+border-radius:9px;
+font-weight:bold;
+}
+.toast.success .toastIcon{background:#163d27;color:#4ade80}
+.toast.error .toastIcon{background:#421c1c;color:#f87171}
+.toast.warning .toastIcon{background:#433316;color:#fbbf24}
+.toast.info .toastIcon{background:#172d48;color:#60a5fa}
+.toastBody{flex:1}
+.toastTitle{font-size:12px;font-weight:700}
+.toastText{font-size:11px;color:#8b8b98;margin-top:2px}
+.toastClose{
+border:0;
+background:none;
+color:#777;
+font-size:18px;
+}
+@keyframes tin{
+from{opacity:0;transform:translateX(30px)}
+to{opacity:1;transform:translateX(0)}
+}
+@keyframes tout{
+to{opacity:0;transform:translateX(30px)}
+}
+@media(max-width:850px){
+.sidebar{transform:translateX(-100%);transition:.25s}
+.sidebar.open{transform:translateX(0)}
+.main{
+margin-left:0;
+padding:75px 18px 20px;
+}
+.mobile{
+display:flex;
+position:fixed;
+top:0;left:0;right:0;
+height:58px;
+align-items:center;
+gap:10px;
+padding:10px 14px;
+background:rgba(7,7,11,.92);
+border-bottom:1px solid var(--border);
+backdrop-filter:blur(15px);
+z-index:900;
+}
+.menu{
+width:38px;height:38px;
+border:1px solid var(--border);
+border-radius:10px;
+background:#111118;
+color:#fff;
+}
+.grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+.tool{padding:14px}
+.toolHead{align-items:flex-start;flex-direction:column}
+.downloadRow{flex-direction:column}
+.chat{height:calc(100vh - 180px)}
+.chatInput{align-items:flex-end}
+.chatInput button{width:85px;height:48px}
+.msg{max-width:90%}
+#toast-container{left:12px;right:12px;top:12px}
+.toast{min-width:0;max-width:none;width:100%}
 }
 </style>
 </head>
 
 <body>
 
-<!-- MOBILE HEADER -->
-
-<div class="mobile-header">
-    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-    <div class="mobile-logo">EXRY <span class="gradient">HUB</span></div>
+<div class="mobile">
+<button class="menu" onclick="toggleMenu()">☰</button>
+<strong>EXRY <span class="gradient">HUB</span></strong>
 </div>
 
-<!-- SIDEBAR -->
-
 <aside class="sidebar" id="sidebar">
+<div class="logo">
+<div class="logoIcon">E</div>
+<div class="logoText">EXRY <span>HUB</span></div>
+</div>
 
-    <div class="logo">
-        <div class="logo-icon">E</div>
-        <div class="logo-text">
-            EXRY <span>HUB</span>
-        </div>
-    </div>
+<div class="navLabel">Tools</div>
 
-    <div class="nav-title">Tools</div>
-
-    <button class="nav-btn active" onclick="showPage('home', this)">
-        <span class="nav-icon">⌂</span>
-        Home
-    </button>
-
-    <button class="nav-btn" onclick="showPage('obfuscator', this)">
-        <span class="nav-icon">🛡️</span>
-        Lua Obfuscator
-    </button>
-
-    <button class="nav-btn" onclick="showPage('downloader', this)">
-        <span class="nav-icon">📥</span>
-        Video Downloader
-    </button>
-
-    <button class="nav-btn" onclick="showPage('ai', this)">
-        <span class="nav-icon">🤖</span>
-        AI Generator
-    </button>
-
+<button class="nav active" onclick="page('home',this)">⌂ &nbsp; Home</button>
+<button class="nav" onclick="page('obf',this)">🛡️ &nbsp; Lua Obfuscator</button>
+<button class="nav" onclick="page('downloader',this)">📥 &nbsp; Video Downloader</button>
+<button class="nav" onclick="page('ai',this)">🤖 &nbsp; AI Chat</button>
 </aside>
-
-<!-- MAIN -->
 
 <main class="main">
 
-<!-- HOME -->
-
 <section class="page active" id="home">
+<div class="hero">
+<div class="badge">EXRY HUB</div>
+<h1>Tools for <span class="gradient">Creators.</span></h1>
+<p>Lua tools, video tools, dan AI chat dalam satu website.</p>
+</div>
 
-    <div class="hero">
+<div class="grid">
+<div class="card">
+<div class="featureIcon">🛡️</div>
+<h3>Lua Obfuscator</h3>
+<p>Memproses source Lua menjadi bentuk yang lebih sulit dibaca.</p>
+</div>
 
-        <div class="badge">
-            ✦ EXRY HUB TOOLS
-        </div>
+<div class="card">
+<div class="featureIcon">📥</div>
+<h3>Video Downloader</h3>
+<p>Mengunduh URL yang mengarah langsung ke file video.</p>
+</div>
 
-        <h1>
-            Powerful tools.<br>
-            <span class="gradient">Simple experience.</span>
-        </h1>
-
-        <p>
-            Selamat datang di Exry Hub. Gunakan berbagai tools
-            untuk kebutuhan Lua, video, dan AI dalam satu tempat.
-        </p>
-
-    </div>
-
-    <div class="grid">
-
-        <div class="feature">
-            <div class="feature-icon">🛡️</div>
-            <h3>Lua Obfuscator</h3>
-            <p>
-                Lindungi script Lua kamu dengan interface
-                obfuscator yang sederhana dan modern.
-            </p>
-        </div>
-
-        <div class="feature">
-            <div class="feature-icon">📥</div>
-            <h3>Video Downloader</h3>
-            <p>
-                Masukkan URL video untuk menggunakan
-                interface downloader Exry Hub.
-            </p>
-        </div>
-
-        <div class="feature">
-            <div class="feature-icon">🤖</div>
-            <h3>AI Generator</h3>
-            <p>
-                Buat caption, bio, username, ide dan
-                berbagai teks dengan AI tools.
-            </p>
-        </div>
-
-    </div>
-
+<div class="card">
+<div class="featureIcon">🤖</div>
+<h3>AI Chat</h3>
+<p>Chat multi-turn menggunakan model Groq dari server.</p>
+</div>
+</div>
 </section>
 
+<section class="page" id="obf">
+<div class="hero">
+<div class="badge">LUA PROTECTION</div>
+<h1>Lua <span class="gradient">Obfuscator</span></h1>
+<p>Masukkan source Lua dan proses dari backend.</p>
+</div>
 
-<!-- LUA OBFUSCATOR -->
+<div class="tool">
+<div class="toolHead">
+<div>
+<h2>Source Code</h2>
+<p>Paste source Lua kamu.</p>
+</div>
+<select id="obfLevel" style="max-width:150px">
+<option value="basic">Basic</option>
+<option value="strong">Strong</option>
+<option value="extreme">Extreme</option>
+</select>
+</div>
 
-<section class="page" id="obfuscator">
+<textarea id="luaInput" placeholder="print('Hello Exry Hub')"></textarea>
 
-    <div class="hero">
+<div class="row">
+<button class="primary" onclick="obfuscate()">🛡️ Obfuscate</button>
+<button class="secondary" onclick="clearObf()">Clear</button>
+</div>
 
-        <div class="badge">
-            🛡️ LUA PROTECTION
-        </div>
-
-        <h1>
-            Lua <span class="gradient">Obfuscator</span>
-        </h1>
-
-        <p>
-            Masukkan script Lua kamu dan proses menjadi
-            kode yang lebih sulit dibaca.
-        </p>
-
-    </div>
-
-    <div class="tool-card">
-
-        <div class="card-title">
-
-            <div>
-                <h2>Source Code</h2>
-                <p>Paste script Lua kamu di bawah.</p>
-            </div>
-
-            <select id="obfLevel" style="max-width:150px;">
-                <option value="Basic">Basic</option>
-                <option value="Strong">Strong</option>
-                <option value="Extreme">Extreme</option>
-            </select>
-
-        </div>
-
-        <textarea
-            id="luaInput"
-            placeholder="-- Paste Lua script kamu di sini...
-
-print('Hello Exry Hub')"
-        ></textarea>
-
-        <div class="button-row">
-
-            <button class="primary-btn" onclick="obfuscateLua()">
-                🛡️ Obfuscate
-            </button>
-
-            <button class="secondary-btn" onclick="clearLua()">
-                Clear
-            </button>
-
-        </div>
-
-        <div class="result-box">
-
-            <div class="result-header">
-
-                <div>
-                    <div class="result-title">
-                        Obfuscated Result
-                    </div>
-
-                    <span id="resultStatus">
-                        Ready
-                    </span>
-                </div>
-
-                <div class="result-actions">
-
-                    <button
-                        class="action-btn"
-                        onclick="copyResult()"
-                    >
-                        📋 Copy
-                    </button>
-
-                    <button
-                        class="action-btn"
-                        onclick="downloadResult()"
-                    >
-                        ⬇️ Download
-                    </button>
-
-                </div>
-
-            </div>
-
-            <textarea
-                id="obfuscatedResult"
-                placeholder="Hasil obfuscation akan muncul di sini..."
-                spellcheck="false"
-            ></textarea>
-
-        </div>
-
-    </div>
-
+<div class="result">
+<div class="resultHead">
+<div>
+<div class="resultTitle">Obfuscated Result</div>
+<span class="status" id="obfStatus">Ready</span>
+</div>
+<div class="resultActions">
+<button class="small" onclick="copyObf()">📋 Copy</button>
+<button class="small" onclick="downloadObf()">⬇️ Download</button>
+</div>
+</div>
+<textarea id="obfuscatedResult" readonly placeholder="Hasil akan muncul di sini..."></textarea>
+</div>
+</div>
 </section>
-
-
-<!-- DOWNLOADER -->
 
 <section class="page" id="downloader">
+<div class="hero">
+<div class="badge">VIDEO TOOLS</div>
+<h1>Video <span class="gradient">Downloader</span></h1>
+<p>Masukkan URL yang mengarah langsung ke file video.</p>
+</div>
 
-    <div class="hero">
+<div class="tool">
+<div class="toolHead">
+<div>
+<h2>Video URL</h2>
+<p>Contoh: URL file .mp4 yang dapat diakses publik.</p>
+</div>
+</div>
 
-        <div class="badge">
-            📥 VIDEO TOOLS
-        </div>
-
-        <h1>
-            Video <span class="gradient">Downloader</span>
-        </h1>
-
-        <p>
-            Masukkan URL video untuk menggunakan
-            downloader Exry Hub.
-        </p>
-
-    </div>
-
-    <div class="tool-card">
-
-        <div class="card-title">
-            <div>
-                <h2>Video URL</h2>
-                <p>Paste URL video di bawah.</p>
-            </div>
-        </div>
-
-        <div class="download-form">
-
-            <input
-                id="videoUrl"
-                type="url"
-                placeholder="https://example.com/video"
-            >
-
-            <button
-                class="primary-btn"
-                onclick="processVideo()"
-            >
-                🔎 Process
-            </button>
-
-        </div>
-
-        <div
-            class="preview"
-            id="videoPreview"
-        >
-
-            <h3>Video Ready</h3>
-
-            <p id="videoPreviewText">
-                URL berhasil diterima.
-            </p>
-
-            <div class="button-row">
-
-                <button
-                    class="primary-btn"
-                    onclick="downloadVideoDemo()"
-                >
-                    ⬇️ Download
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
+<div class="downloadRow">
+<input id="videoUrl" placeholder="https://example.com/video.mp4">
+<button class="primary" onclick="downloadVideo()">⬇️ Download</button>
+</div>
+</div>
 </section>
 
-
-<!-- AI -->
-
 <section class="page" id="ai">
+<div class="hero">
+<div class="badge">GROQ AI</div>
+<h1>AI <span class="gradient">Chat</span></h1>
+<p>Ngobrol dengan AI menggunakan percakapan multi-turn.</p>
+</div>
 
-    <div class="hero">
+<div class="tool chat">
 
-        <div class="badge">
-            🤖 AI TOOLS
-        </div>
+<div class="messages" id="messages">
+<div class="msg ai">Halo! Saya Exry AI. Ada yang bisa saya bantu?</div>
+</div>
 
-        <h1>
-            AI <span class="gradient">Generator</span>
-        </h1>
+<div class="typing" id="typing">AI sedang mengetik...</div>
 
-        <p>
-            Buat berbagai teks menggunakan AI Generator
-            Exry Hub.
-        </p>
+<div class="chatTools">
+<button class="secondary" onclick="newChat()">＋ New Chat</button>
+<button class="secondary" onclick="copyChat()">📋 Copy</button>
+<button class="secondary" onclick="downloadChat()">⬇️ Download</button>
+</div>
 
-    </div>
+<div class="chatInput">
+<textarea
+id="chatInput"
+placeholder="Tulis pesan..."></textarea>
+<button class="primary" onclick="sendChat()">Send</button>
+</div>
 
-    <div class="tool-card">
-
-        <div class="card-title">
-
-            <div>
-                <h2>Generate Content</h2>
-                <p>Pilih tipe konten dan masukkan prompt.</p>
-            </div>
-
-        </div>
-
-        <div class="ai-options">
-
-            <select id="aiType">
-
-                <option value="caption">
-                    Caption
-                </option>
-
-                <option value="bio">
-                    Bio
-                </option>
-
-                <option value="username">
-                    Username
-                </option>
-
-                <option value="prompt">
-                    AI Prompt
-                </option>
-
-            </select>
-
-            <input
-                id="aiTopic"
-                placeholder="Contoh: Roblox, gaming, coding..."
-            >
-
-        </div>
-
-        <button
-            class="primary-btn"
-            onclick="generateAI()"
-        >
-            ✨ Generate
-        </button>
-
-        <div
-            id="aiResult"
-            class="ai-result"
-        >
-            Hasil AI akan muncul di sini...
-        </div>
-
-        <div class="button-row">
-
-            <button
-                class="secondary-btn"
-                onclick="copyAI()"
-            >
-                📋 Copy
-            </button>
-
-            <button
-                class="secondary-btn"
-                onclick="downloadAI()"
-            >
-                ⬇️ Download
-            </button>
-
-        </div>
-
-    </div>
-
+</div>
 </section>
 
 </main>
 
-
-<!-- TOAST -->
-
 <div id="toast-container"></div>
 
-
 <script>
+let conversation = [];
 
-/* NAVIGATION */
-
-function showPage(pageId, button) {
-
-    document.querySelectorAll(".page")
-        .forEach(page => page.classList.remove("active"));
-
-    document.getElementById(pageId)
-        .classList.add("active");
-
-    document.querySelectorAll(".nav-btn")
-        .forEach(btn => btn.classList.remove("active"));
-
-    if (button) {
-        button.classList.add("active");
-    }
-
-    document.getElementById("sidebar")
-        .classList.remove("open");
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+function page(id,btn){
+document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));
+btn.classList.add("active");
+document.getElementById("sidebar").classList.remove("open");
+window.scrollTo({top:0,behavior:"smooth"});
 }
 
-
-/* MOBILE SIDEBAR */
-
-function toggleSidebar() {
-
-    document.getElementById("sidebar")
-        .classList.toggle("open");
-
+function toggleMenu(){
+document.getElementById("sidebar").classList.toggle("open");
 }
 
-
-/* TOAST */
-
-function showToast(
-    message,
-    type = "info",
-    title = null,
-    duration = 3500
-) {
-
-    const container =
-        document.getElementById("toast-container");
-
-    const settings = {
-
-        success: {
-            icon: "✓",
-            title: "Berhasil"
-        },
-
-        error: {
-            icon: "!",
-            title: "Terjadi Kesalahan"
-        },
-
-        warning: {
-            icon: "⚠",
-            title: "Peringatan"
-        },
-
-        info: {
-            icon: "i",
-            title: "Informasi"
-        }
-
-    };
-
-    const config =
-        settings[type] || settings.info;
-
-    const toast =
-        document.createElement("div");
-
-    toast.className =
-        `toast toast-${type}`;
-
-    toast.innerHTML = `
-
-        <div class="toast-icon">
-            ${config.icon}
-        </div>
-
-        <div class="toast-content">
-
-            <div class="toast-title">
-                ${title || config.title}
-            </div>
-
-            <div class="toast-message">
-                ${message}
-            </div>
-
-        </div>
-
-        <button
-            class="toast-close"
-            onclick="closeToast(this)"
-        >
-            ×
-        </button>
-
-    `;
-
-    container.appendChild(toast);
-
-    const timer = setTimeout(() => {
-
-        closeToast(toast);
-
-    }, duration);
-
-    toast.dataset.timer = timer;
+function toast(text,type="info",title="Informasi"){
+const c=document.getElementById("toast-container");
+const el=document.createElement("div");
+el.className=`toast ${type}`;
+el.innerHTML=`
+<div class="toastIcon">${type==="success"?"✓":type==="error"?"!":type==="warning"?"⚠":"i"}</div>
+<div class="toastBody">
+<div class="toastTitle">${title}</div>
+<div class="toastText">${escapeHtml(text)}</div>
+</div>
+<button class="toastClose" onclick="this.parentElement.remove()">×</button>`;
+c.appendChild(el);
+setTimeout(()=>{
+el.classList.add("hide");
+setTimeout(()=>el.remove(),300);
+},3500);
 }
 
-
-function closeToast(element) {
-
-    const toast =
-        element.closest
-            ? element.closest(".toast")
-            : element;
-
-    if (!toast) return;
-
-    clearTimeout(
-        Number(toast.dataset.timer)
-    );
-
-    toast.classList.add("hide");
-
-    setTimeout(() => {
-
-        toast.remove();
-
-    }, 300);
+function escapeHtml(str){
+return String(str)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
 }
 
+/* LUA */
 
-/* LUA OBFUSCATOR DEMO */
+async function obfuscate(){
+const source=document.getElementById("luaInput").value.trim();
+const level=document.getElementById("obfLevel").value;
 
-function obfuscateLua() {
-
-    const input =
-        document.getElementById("luaInput")
-        .value.trim();
-
-    const level =
-        document.getElementById("obfLevel")
-        .value;
-
-    if (!input) {
-
-        showToast(
-            "Masukkan script Lua terlebih dahulu.",
-            "warning",
-            "Script Kosong"
-        );
-
-        return;
-    }
-
-    /*
-       Demo frontend.
-
-       Ini bukan engine obfuscator sungguhan.
-       API/backend dapat dihubungkan di sini
-       nantinya.
-    */
-
-    const encoded =
-        btoa(
-            unescape(
-                encodeURIComponent(input)
-            )
-        );
-
-    const result = `-- Exry Hub Lua Obfuscator
--- Protection: ${level}
--- Generated: ${new Date().toLocaleString("id-ID")}
-
-local encoded = "${encoded}"
-
-local function decode(data)
-    local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-    data = string.gsub(data, '[^'..b..'=]', '')
-
-    return (data:gsub('.', function(x)
-        if x == '=' then return '' end
-
-        local r,f='',(b:find(x)-1)
-
-        for i=6,1,-1 do
-            r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0')
-        end
-
-        return r
-    end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
-        if #x ~= 8 then return '' end
-
-        local c=0
-
-        for i=1,8 do
-            c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0)
-        end
-
-        return string.char(c)
-    end))
-end
-
--- Protected source
-local source = decode(encoded)
-
--- Exry Hub
--- Level: ${level}
-
-${input}
-`;
-
-    document.getElementById(
-        "obfuscatedResult"
-    ).value = result;
-
-    document.getElementById(
-        "resultStatus"
-    ).textContent = "Completed";
-
-    showToast(
-        "Script berhasil diproses.",
-        "success",
-        "Obfuscation Selesai"
-    );
+if(!source){
+toast("Masukkan source Lua terlebih dahulu.","warning","Source Kosong");
+return;
 }
 
+const status=document.getElementById("obfStatus");
+status.textContent="Processing...";
 
-function clearLua() {
+try{
+const res=await fetch("/api/obfuscate",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({source,level})
+});
 
-    document.getElementById("luaInput")
-        .value = "";
+const data=await res.json();
 
-    document.getElementById("obfuscatedResult")
-        .value = "";
+if(!res.ok) throw new Error(data.error||"Obfuscation gagal");
 
-    document.getElementById("resultStatus")
-        .textContent = "Ready";
+document.getElementById("obfuscatedResult").value=data.code;
+status.textContent="Completed";
 
-    showToast(
-        "Editor berhasil dibersihkan.",
-        "info",
-        "Cleared"
-    );
+toast("Script berhasil diproses.","success","Obfuscation Selesai");
+
+}catch(e){
+status.textContent="Error";
+toast(e.message,"error","Obfuscation Gagal");
+}
 }
 
-
-/* COPY RESULT */
-
-async function copyResult() {
-
-    const result =
-        document.getElementById(
-            "obfuscatedResult"
-        ).value.trim();
-
-    if (!result) {
-
-        showToast(
-            "Belum ada hasil untuk disalin.",
-            "warning",
-            "Hasil Kosong"
-        );
-
-        return;
-    }
-
-    try {
-
-        await navigator.clipboard
-            .writeText(result);
-
-        showToast(
-            "Hasil berhasil disalin ke clipboard.",
-            "success",
-            "Copy Berhasil"
-        );
-
-    } catch (error) {
-
-        const textarea =
-            document.getElementById(
-                "obfuscatedResult"
-            );
-
-        textarea.focus();
-        textarea.select();
-
-        try {
-
-            document.execCommand("copy");
-
-            showToast(
-                "Hasil berhasil disalin.",
-                "success",
-                "Copy Berhasil"
-            );
-
-        } catch (err) {
-
-            showToast(
-                "Gagal menyalin hasil.",
-                "error",
-                "Copy Gagal"
-            );
-
-        }
-    }
+function clearObf(){
+document.getElementById("luaInput").value="";
+document.getElementById("obfuscatedResult").value="";
+document.getElementById("obfStatus").textContent="Ready";
 }
 
-
-/* DOWNLOAD RESULT */
-
-function downloadResult() {
-
-    const result =
-        document.getElementById(
-            "obfuscatedResult"
-        ).value.trim();
-
-    if (!result) {
-
-        showToast(
-            "Belum ada hasil untuk didownload.",
-            "warning",
-            "Hasil Kosong"
-        );
-
-        return;
-    }
-
-    const blob =
-        new Blob(
-            [result],
-            {
-                type:
-                    "text/plain;charset=utf-8"
-            }
-        );
-
-    const url =
-        URL.createObjectURL(blob);
-
-    const link =
-        document.createElement("a");
-
-    link.href = url;
-
-    link.download =
-        "exry-obfuscated.lua";
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
-    URL.revokeObjectURL(url);
-
-    showToast(
-        "File Lua berhasil didownload.",
-        "success",
-        "Download Berhasil"
-    );
+async function copyObf(){
+const text=document.getElementById("obfuscatedResult").value;
+if(!text){
+toast("Belum ada hasil.","warning","Kosong");
+return;
+}
+await navigator.clipboard.writeText(text);
+toast("Hasil berhasil disalin.","success","Copy Berhasil");
 }
 
+function downloadObf(){
+const text=document.getElementById("obfuscatedResult").value;
+if(!text){
+toast("Belum ada hasil.","warning","Kosong");
+return;
+}
+downloadBlob(text,"exry-obfuscated.lua","text/plain");
+toast("File Lua berhasil dibuat.","success","Download Berhasil");
+}
 
 /* VIDEO */
 
-function processVideo() {
+async function downloadVideo(){
+const url=document.getElementById("videoUrl").value.trim();
 
-    const url =
-        document.getElementById(
-            "videoUrl"
-        ).value.trim();
-
-    if (!url) {
-
-        showToast(
-            "Masukkan URL video terlebih dahulu.",
-            "warning",
-            "URL Kosong"
-        );
-
-        return;
-    }
-
-    document.getElementById(
-        "videoPreview"
-    ).classList.add("show");
-
-    document.getElementById(
-        "videoPreviewText"
-    ).textContent =
-        "URL berhasil diterima: " + url;
-
-    showToast(
-        "URL berhasil diproses.",
-        "success",
-        "Video Ready"
-    );
+if(!url){
+toast("Masukkan URL video.","warning","URL Kosong");
+return;
 }
 
+toast("Sedang mengambil video...","info","Processing");
 
-function downloadVideoDemo() {
+try{
+const res=await fetch("/api/download",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({url})
+});
 
-    showToast(
-        "Downloader membutuhkan backend/API untuk mengambil file video.",
-        "info",
-        "Backend Diperlukan",
-        5000
-    );
+if(!res.ok){
+const data=await res.json().catch(()=>({}));
+throw new Error(data.error||"Download gagal");
 }
 
+const blob=await res.blob();
+const objectUrl=URL.createObjectURL(blob);
+const a=document.createElement("a");
+a.href=objectUrl;
+a.download="exry-video.mp4";
+document.body.appendChild(a);
+a.click();
+a.remove();
+URL.revokeObjectURL(objectUrl);
 
-/* AI DEMO */
+toast("Video berhasil diunduh.","success","Download Berhasil");
 
-function generateAI() {
-
-    const type =
-        document.getElementById(
-            "aiType"
-        ).value;
-
-    const topic =
-        document.getElementById(
-            "aiTopic"
-        ).value.trim();
-
-    if (!topic) {
-
-        showToast(
-            "Masukkan topik terlebih dahulu.",
-            "warning",
-            "Topik Kosong"
-        );
-
-        return;
-    }
-
-    let result = "";
-
-    if (type === "caption") {
-
-        result =
-`🔥 ${topic}
-
-Tetap berkarya, tetap berkembang, dan jangan takut mencoba hal baru.
-
-#ExryHub #Gaming #Creator`;
-
-    }
-
-    else if (type === "bio") {
-
-        result =
-`⚡ ${topic}
-🎮 Creator & Digital Tools
-🚀 Build • Create • Share
-🛡️ Powered by Exry Hub`;
-
-    }
-
-    else if (type === "username") {
-
-        const names = [
-            "Exry" + topic,
-            topic + "X",
-            "Exry_" + topic,
-            "The" + topic,
-            topic + "Hub",
-            "X" + topic
-        ];
-
-        result =
-            names.join("\n");
-
-    }
-
-    else if (type === "prompt") {
-
-        result =
-`Buatkan konten profesional bertema "${topic}".
-
-Gaya:
-- Modern
-- Menarik
-- Singkat
-- Cocok untuk media sosial
-- Gunakan bahasa Indonesia yang natural`;
-
-    }
-
-    document.getElementById(
-        "aiResult"
-    ).textContent = result;
-
-    showToast(
-        "Konten berhasil dibuat.",
-        "success",
-        "AI Generated"
-    );
+}catch(e){
+toast(e.message,"error","Download Gagal");
+}
 }
 
+/* AI CHAT */
 
-/* COPY AI */
-
-async function copyAI() {
-
-    const result =
-        document.getElementById(
-            "aiResult"
-        ).textContent;
-
-    if (
-        !result ||
-        result === "Hasil AI akan muncul di sini..."
-    ) {
-
-        showToast(
-            "Belum ada hasil AI.",
-            "warning",
-            "Hasil Kosong"
-        );
-
-        return;
-    }
-
-    try {
-
-        await navigator.clipboard
-            .writeText(result);
-
-        showToast(
-            "Hasil AI berhasil disalin.",
-            "success",
-            "Copy Berhasil"
-        );
-
-    } catch {
-
-        showToast(
-            "Gagal menyalin hasil.",
-            "error",
-            "Copy Gagal"
-        );
-    }
+function addMessage(role,text){
+const box=document.getElementById("messages");
+const div=document.createElement("div");
+div.className=`msg ${role==="user"?"user":"ai"}`;
+div.textContent=text;
+box.appendChild(div);
+box.scrollTop=box.scrollHeight;
 }
 
+async function sendChat(){
+const input=document.getElementById("chatInput");
+const text=input.value.trim();
 
-/* DOWNLOAD AI */
+if(!text)return;
 
-function downloadAI() {
+input.value="";
+addMessage("user",text);
 
-    const result =
-        document.getElementById(
-            "aiResult"
-        ).textContent;
+conversation.push({
+role:"user",
+content:text
+});
 
-    if (
-        !result ||
-        result === "Hasil AI akan muncul di sini..."
-    ) {
+document.getElementById("typing").style.display="block";
 
-        showToast(
-            "Belum ada hasil AI.",
-            "warning",
-            "Hasil Kosong"
-        );
+try{
+const res=await fetch("/api/chat",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+messages:conversation
+})
+});
 
-        return;
-    }
+const data=await res.json();
 
-    const blob =
-        new Blob(
-            [result],
-            {
-                type:
-                    "text/plain;charset=utf-8"
-            }
-        );
+if(!res.ok)throw new Error(data.error||"AI gagal merespons");
 
-    const url =
-        URL.createObjectURL(blob);
+const answer=data.message||"Tidak ada respons.";
 
-    const link =
-        document.createElement("a");
+conversation.push({
+role:"assistant",
+content:answer
+});
 
-    link.href = url;
+addMessage("assistant",answer);
 
-    link.download =
-        "exry-ai-result.txt";
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
-    URL.revokeObjectURL(url);
-
-    showToast(
-        "Hasil AI berhasil didownload.",
-        "success",
-        "Download Berhasil"
-    );
+}catch(e){
+toast(e.message,"error","AI Error");
+conversation.pop();
+}finally{
+document.getElementById("typing").style.display="none";
+}
 }
 
+document.getElementById("chatInput").addEventListener("keydown",e=>{
+if(e.key==="Enter"&&!e.shiftKey){
+e.preventDefault();
+sendChat();
+}
+});
+
+function newChat(){
+conversation=[];
+document.getElementById("messages").innerHTML=
+`<div class="msg ai">Chat baru dimulai. Ada yang bisa saya bantu?</div>`;
+toast("Percakapan lama dibersihkan.","success","New Chat");
+}
+
+async function copyChat(){
+const text=conversation.map(x=>
+`${x.role==="user"?"You":"Exry AI"}: ${x.content}`
+).join("\n\n");
+
+if(!text){
+toast("Belum ada percakapan.","warning","Kosong");
+return;
+}
+
+await navigator.clipboard.writeText(text);
+toast("Percakapan disalin.","success","Copy Berhasil");
+}
+
+function downloadChat(){
+const text=conversation.map(x=>
+`${x.role==="user"?"You":"Exry AI"}: ${x.content}`
+).join("\n\n");
+
+if(!text){
+toast("Belum ada percakapan.","warning","Kosong");
+return;
+}
+
+downloadBlob(text,"exry-chat.txt","text/plain");
+toast("Chat berhasil didownload.","success","Download Berhasil");
+}
+
+function downloadBlob(content,name,type){
+const blob=new Blob([content],{type});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+a.href=url;
+a.download=name;
+document.body.appendChild(a);
+a.click();
+a.remove();
+URL.revokeObjectURL(url);
+}
 </script>
-
 </body>
 </html>

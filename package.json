@@ -1,0 +1,12 @@
+{
+  "name": "exry-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Exry Hub tools",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

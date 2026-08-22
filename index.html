@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Exry Hub • Tools</title>
+<meta name="description" content="Exry Hub - Lua Obfuscator, Video Downloader & AI Generator">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #07070b;
+    --panel: #0d0d13;
+    --panel2: #12121a;
+    --border: rgba(255,255,255,.09);
+    --text: #ffffff;
+    --muted: #8c8c9b;
+    --primary: #8b5cf6;
+    --primary2: #6366f1;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(124,58,237,.14), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(59,130,246,.10), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    padding: 22px 15px;
+    background: rgba(9,9,14,.88);
+    border-right: 1px solid var(--border);
+    backdrop-filter: blur(18px);
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 8px 10px 28px;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--primary2));
+    font-weight: 900;
+    box-shadow: 0 10px 30px rgba(124,58,237,.25);
+}
+
+.logo-text {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.logo-text span {
+    color: #9f8cff;
+}
+
+.nav-title {
+    padding: 0 12px;
+    margin-bottom: 8px;
+    color: #626272;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+}
+
+.nav-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    margin-bottom: 6px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #a1a1af;
+    cursor: pointer;
+    text-align: left;
+    transition: .2s;
+}
+
+.nav-btn:hover {
+    background: rgba(255,255,255,.05);
+    color: white;
+}
+
+.nav-btn.active {
+    background: linear-gradient(
+        135deg,
+        rgba(139,92,246,.22),
+        rgba(99,102,241,.12)
+    );
+    color: white;
+    border: 1px solid rgba(139,92,246,.2);
+}
+
+.nav-icon {
+    width: 25px;
+    text-align: center;
+    font-size: 17px;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 250px;
+    padding: 35px;
+    max-width: 1450px;
+}
+
+.mobile-header {
+    display: none;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.hero {
+    margin-bottom: 25px;
+}
+
+.badge {
+    display: inline-flex;
+    padding: 7px 11px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(139,92,246,.25);
+    border-radius: 999px;
+    background: rgba(139,92,246,.08);
+    color: #b5a1ff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+h1 {
+    font-size: clamp(30px, 5vw, 52px);
+    line-height: 1.05;
+    margin-bottom: 12px;
+}
+
+.gradient {
+    background: linear-gradient(90deg, #a78bfa, #60a5fa);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    max-width: 650px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+/* CARDS */
+
+.tool-card {
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: rgba(15,15,22,.78);
+    box-shadow: 0 20px 50px rgba(0,0,0,.18);
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.card-title h2 {
+    font-size: 17px;
+}
+
+.card-title p {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* TEXTAREA */
+
+textarea,
+input,
+select {
+    width: 100%;
+    outline: none;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #09090e;
+    color: white;
+    font-family: inherit;
+}
+
+textarea {
+    min-height: 270px;
+    padding: 15px;
+    resize: vertical;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+input {
+    padding: 14px;
+}
+
+select {
+    padding: 13px;
+}
+
+textarea:focus,
+input:focus,
+select:focus {
+    border-color: rgba(139,92,246,.6);
+}
+
+/* BUTTONS */
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn {
+    border: 0;
+    border-radius: 11px;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, var(--primary), var(--primary2));
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(99,102,241,.2);
+    transition: .2s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+}
+
+.secondary-btn {
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 12px 18px;
+    background: rgba(255,255,255,.05);
+    color: white;
+    cursor: pointer;
+}
+
+.secondary-btn:hover {
+    background: rgba(255,255,255,.09);
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 13px;
+}
+
+/* RESULT */
+
+.result-box {
+    margin-top: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(255,255,255,.025);
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.result-title {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#resultStatus {
+    display: block;
+    margin-top: 4px;
+    color: #4ade80;
+    font-size: 10px;
+}
+
+.result-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,.05);
+    color: white;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.action-btn:hover {
+    background: rgba(255,255,255,.1);
+}
+
+#obfuscatedResult {
+    min-height: 300px;
+    border: 0;
+    border-radius: 0;
+}
+
+/* GRID */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.feature {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(255,255,255,.025);
+}
+
+.feature-icon {
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+
+.feature h3 {
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.feature p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* DOWNLOAD */
+
+.download-form {
+    display: flex;
+    gap: 10px;
+}
+
+.download-form input {
+    flex: 1;
+}
+
+.preview {
+    display: none;
+    margin-top: 18px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255,255,255,.03);
+}
+
+.preview.show {
+    display: block;
+}
+
+.preview h3 {
+    margin-bottom: 8px;
+}
+
+.preview p {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* AI */
+
+.ai-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.ai-result {
+    min-height: 220px;
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: #09090e;
+    color: #ddd;
+    white-space: pre-wrap;
+    line-height: 1.7;
+    font-size: 13px;
+}
+
+/* TOAST */
+
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    min-width: 270px;
+    max-width: 370px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 14px;
+    background: rgba(17,17,24,.96);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 15px 40px rgba(0,0,0,.4);
+    pointer-events: auto;
+    animation: toastIn .3s ease forwards;
+}
+
+.toast.hide {
+    animation: toastOut .3s ease forwards;
+}
+
+.toast-icon {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.toast-success .toast-icon {
+    background: rgba(34,197,94,.15);
+    color: #4ade80;
+}
+
+.toast-error .toast-icon {
+    background: rgba(239,68,68,.15);
+    color: #f87171;
+}
+
+.toast-warning .toast-icon {
+    background: rgba(245,158,11,.15);
+    color: #fbbf24;
+}
+
+.toast-info .toast-icon {
+    background: rgba(59,130,246,.15);
+    color: #60a5fa;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    margin-bottom: 2px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.toast-message {
+    color: #888894;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.toast-close {
+    border: 0;
+    background: transparent;
+    color: #777;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateX(35px) scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes toastOut {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(35px) scale(.96);
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 850px) {
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: .25s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 20px;
+        padding-top: 75px;
+    }
+
+    .mobile-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px;
+        background: rgba(7,7,11,.9);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(15px);
+        z-index: 900;
+    }
+
+    .menu-btn {
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: rgba(255,255,255,.05);
+        color: white;
+        cursor: pointer;
+    }
+
+    .mobile-logo {
+        font-weight: 800;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .main {
+        padding: 18px;
+        padding-top: 75px;
+    }
+
+    .tool-card {
+        padding: 15px;
+    }
+
+    .result-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .result-actions {
+        width: 100%;
+    }
+
+    .action-btn {
+        flex: 1;
+    }
+
+    .download-form {
+        flex-direction: column;
+    }
+
+    .ai-options {
+        grid-template-columns: 1fr;
+    }
+
+    #toast-container {
+        left: 15px;
+        right: 15px;
+        top: 15px;
+    }
+
+    .toast {
+        width: 100%;
+        min-width: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MOBILE HEADER -->
+
+<div class="mobile-header">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="mobile-logo">EXRY <span class="gradient">HUB</span></div>
+</div>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">E</div>
+        <div class="logo-text">
+            EXRY <span>HUB</span>
+        </div>
+    </div>
+
+    <div class="nav-title">Tools</div>
+
+    <button class="nav-btn active" onclick="showPage('home', this)">
+        <span class="nav-icon">⌂</span>
+        Home
+    </button>
+
+    <button class="nav-btn" onclick="showPage('obfuscator', this)">
+        <span class="nav-icon">🛡️</span>
+        Lua Obfuscator
+    </button>
+
+    <button class="nav-btn" onclick="showPage('downloader', this)">
+        <span class="nav-icon">📥</span>
+        Video Downloader
+    </button>
+
+    <button class="nav-btn" onclick="showPage('ai', this)">
+        <span class="nav-icon">🤖</span>
+        AI Generator
+    </button>
+
+</aside>
+
+<!-- MAIN -->
+
+<main class="main">
+
+<!-- HOME -->
+
+<section class="page active" id="home">
+
+    <div class="hero">
+
+        <div class="badge">
+            ✦ EXRY HUB TOOLS
+        </div>
+
+        <h1>
+            Powerful tools.<br>
+            <span class="gradient">Simple experience.</span>
+        </h1>
+
+        <p>
+            Selamat datang di Exry Hub. Gunakan berbagai tools
+            untuk kebutuhan Lua, video, dan AI dalam satu tempat.
+        </p>
+
+    </div>
+
+    <div class="grid">
+
+        <div class="feature">
+            <div class="feature-icon">🛡️</div>
+            <h3>Lua Obfuscator</h3>
+            <p>
+                Lindungi script Lua kamu dengan interface
+                obfuscator yang sederhana dan modern.
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">📥</div>
+            <h3>Video Downloader</h3>
+            <p>
+                Masukkan URL video untuk menggunakan
+                interface downloader Exry Hub.
+            </p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">🤖</div>
+            <h3>AI Generator</h3>
+            <p>
+                Buat caption, bio, username, ide dan
+                berbagai teks dengan AI tools.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- LUA OBFUSCATOR -->
+
+<section class="page" id="obfuscator">
+
+    <div class="hero">
+
+        <div class="badge">
+            🛡️ LUA PROTECTION
+        </div>
+
+        <h1>
+            Lua <span class="gradient">Obfuscator</span>
+        </h1>
+
+        <p>
+            Masukkan script Lua kamu dan proses menjadi
+            kode yang lebih sulit dibaca.
+        </p>
+
+    </div>
+
+    <div class="tool-card">
+
+        <div class="card-title">
+
+            <div>
+                <h2>Source Code</h2>
+                <p>Paste script Lua kamu di bawah.</p>
+            </div>
+
+            <select id="obfLevel" style="max-width:150px;">
+                <option value="Basic">Basic</option>
+                <option value="Strong">Strong</option>
+                <option value="Extreme">Extreme</option>
+            </select>
+
+        </div>
+
+        <textarea
+            id="luaInput"
+            placeholder="-- Paste Lua script kamu di sini...
+
+print('Hello Exry Hub')"
+        ></textarea>
+
+        <div class="button-row">
+
+            <button class="primary-btn" onclick="obfuscateLua()">
+                🛡️ Obfuscate
+            </button>
+
+            <button class="secondary-btn" onclick="clearLua()">
+                Clear
+            </button>
+
+        </div>
+
+        <div class="result-box">
+
+            <div class="result-header">
+
+                <div>
+                    <div class="result-title">
+                        Obfuscated Result
+                    </div>
+
+                    <span id="resultStatus">
+                        Ready
+                    </span>
+                </div>
+
+                <div class="result-actions">
+
+                    <button
+                        class="action-btn"
+                        onclick="copyResult()"
+                    >
+                        📋 Copy
+                    </button>
+
+                    <button
+                        class="action-btn"
+                        onclick="downloadResult()"
+                    >
+                        ⬇️ Download
+                    </button>
+
+                </div>
+
+            </div>
+
+            <textarea
+                id="obfuscatedResult"
+                placeholder="Hasil obfuscation akan muncul di sini..."
+                spellcheck="false"
+            ></textarea>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- DOWNLOADER -->
+
+<section class="page" id="downloader">
+
+    <div class="hero">
+
+        <div class="badge">
+            📥 VIDEO TOOLS
+        </div>
+
+        <h1>
+            Video <span class="gradient">Downloader</span>
+        </h1>
+
+        <p>
+            Masukkan URL video untuk menggunakan
+            downloader Exry Hub.
+        </p>
+
+    </div>
+
+    <div class="tool-card">
+
+        <div class="card-title">
+            <div>
+                <h2>Video URL</h2>
+                <p>Paste URL video di bawah.</p>
+            </div>
+        </div>
+
+        <div class="download-form">
+
+            <input
+                id="videoUrl"
+                type="url"
+                placeholder="https://example.com/video"
+            >
+
+            <button
+                class="primary-btn"
+                onclick="processVideo()"
+            >
+                🔎 Process
+            </button>
+
+        </div>
+
+        <div
+            class="preview"
+            id="videoPreview"
+        >
+
+            <h3>Video Ready</h3>
+
+            <p id="videoPreviewText">
+                URL berhasil diterima.
+            </p>
+
+            <div class="button-row">
+
+                <button
+                    class="primary-btn"
+                    onclick="downloadVideoDemo()"
+                >
+                    ⬇️ Download
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- AI -->
+
+<section class="page" id="ai">
+
+    <div class="hero">
+
+        <div class="badge">
+            🤖 AI TOOLS
+        </div>
+
+        <h1>
+            AI <span class="gradient">Generator</span>
+        </h1>
+
+        <p>
+            Buat berbagai teks menggunakan AI Generator
+            Exry Hub.
+        </p>
+
+    </div>
+
+    <div class="tool-card">
+
+        <div class="card-title">
+
+            <div>
+                <h2>Generate Content</h2>
+                <p>Pilih tipe konten dan masukkan prompt.</p>
+            </div>
+
+        </div>
+
+        <div class="ai-options">
+
+            <select id="aiType">
+
+                <option value="caption">
+                    Caption
+                </option>
+
+                <option value="bio">
+                    Bio
+                </option>
+
+                <option value="username">
+                    Username
+                </option>
+
+                <option value="prompt">
+                    AI Prompt
+                </option>
+
+            </select>
+
+            <input
+                id="aiTopic"
+                placeholder="Contoh: Roblox, gaming, coding..."
+            >
+
+        </div>
+
+        <button
+            class="primary-btn"
+            onclick="generateAI()"
+        >
+            ✨ Generate
+        </button>
+
+        <div
+            id="aiResult"
+            class="ai-result"
+        >
+            Hasil AI akan muncul di sini...
+        </div>
+
+        <div class="button-row">
+
+            <button
+                class="secondary-btn"
+                onclick="copyAI()"
+            >
+                📋 Copy
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="downloadAI()"
+            >
+                ⬇️ Download
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- TOAST -->
+
+<div id="toast-container"></div>
+
+
+<script>
+
+/* NAVIGATION */
+
+function showPage(pageId, button) {
+
+    document.querySelectorAll(".page")
+        .forEach(page => page.classList.remove("active"));
+
+    document.getElementById(pageId)
+        .classList.add("active");
+
+    document.querySelectorAll(".nav-btn")
+        .forEach(btn => btn.classList.remove("active"));
+
+    if (button) {
+        button.classList.add("active");
+    }
+
+    document.getElementById("sidebar")
+        .classList.remove("open");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* MOBILE SIDEBAR */
+
+function toggleSidebar() {
+
+    document.getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* TOAST */
+
+function showToast(
+    message,
+    type = "info",
+    title = null,
+    duration = 3500
+) {
+
+    const container =
+        document.getElementById("toast-container");
+
+    const settings = {
+
+        success: {
+            icon: "✓",
+            title: "Berhasil"
+        },
+
+        error: {
+            icon: "!",
+            title: "Terjadi Kesalahan"
+        },
+
+        warning: {
+            icon: "⚠",
+            title: "Peringatan"
+        },
+
+        info: {
+            icon: "i",
+            title: "Informasi"
+        }
+
+    };
+
+    const config =
+        settings[type] || settings.info;
+
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        `toast toast-${type}`;
+
+    toast.innerHTML = `
+
+        <div class="toast-icon">
+            ${config.icon}
+        </div>
+
+        <div class="toast-content">
+
+            <div class="toast-title">
+                ${title || config.title}
+            </div>
+
+            <div class="toast-message">
+                ${message}
+            </div>
+
+        </div>
+
+        <button
+            class="toast-close"
+            onclick="closeToast(this)"
+        >
+            ×
+        </button>
+
+    `;
+
+    container.appendChild(toast);
+
+    const timer = setTimeout(() => {
+
+        closeToast(toast);
+
+    }, duration);
+
+    toast.dataset.timer = timer;
+}
+
+
+function closeToast(element) {
+
+    const toast =
+        element.closest
+            ? element.closest(".toast")
+            : element;
+
+    if (!toast) return;
+
+    clearTimeout(
+        Number(toast.dataset.timer)
+    );
+
+    toast.classList.add("hide");
+
+    setTimeout(() => {
+
+        toast.remove();
+
+    }, 300);
+}
+
+
+/* LUA OBFUSCATOR DEMO */
+
+function obfuscateLua() {
+
+    const input =
+        document.getElementById("luaInput")
+        .value.trim();
+
+    const level =
+        document.getElementById("obfLevel")
+        .value;
+
+    if (!input) {
+
+        showToast(
+            "Masukkan script Lua terlebih dahulu.",
+            "warning",
+            "Script Kosong"
+        );
+
+        return;
+    }
+
+    /*
+       Demo frontend.
+
+       Ini bukan engine obfuscator sungguhan.
+       API/backend dapat dihubungkan di sini
+       nantinya.
+    */
+
+    const encoded =
+        btoa(
+            unescape(
+                encodeURIComponent(input)
+            )
+        );
+
+    const result = `-- Exry Hub Lua Obfuscator
+-- Protection: ${level}
+-- Generated: ${new Date().toLocaleString("id-ID")}
+
+local encoded = "${encoded}"
+
+local function decode(data)
+    local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+    data = string.gsub(data, '[^'..b..'=]', '')
+
+    return (data:gsub('.', function(x)
+        if x == '=' then return '' end
+
+        local r,f='',(b:find(x)-1)
+
+        for i=6,1,-1 do
+            r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0')
+        end
+
+        return r
+    end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
+        if #x ~= 8 then return '' end
+
+        local c=0
+
+        for i=1,8 do
+            c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0)
+        end
+
+        return string.char(c)
+    end))
+end
+
+-- Protected source
+local source = decode(encoded)
+
+-- Exry Hub
+-- Level: ${level}
+
+${input}
+`;
+
+    document.getElementById(
+        "obfuscatedResult"
+    ).value = result;
+
+    document.getElementById(
+        "resultStatus"
+    ).textContent = "Completed";
+
+    showToast(
+        "Script berhasil diproses.",
+        "success",
+        "Obfuscation Selesai"
+    );
+}
+
+
+function clearLua() {
+
+    document.getElementById("luaInput")
+        .value = "";
+
+    document.getElementById("obfuscatedResult")
+        .value = "";
+
+    document.getElementById("resultStatus")
+        .textContent = "Ready";
+
+    showToast(
+        "Editor berhasil dibersihkan.",
+        "info",
+        "Cleared"
+    );
+}
+
+
+/* COPY RESULT */
+
+async function copyResult() {
+
+    const result =
+        document.getElementById(
+            "obfuscatedResult"
+        ).value.trim();
+
+    if (!result) {
+
+        showToast(
+            "Belum ada hasil untuk disalin.",
+            "warning",
+            "Hasil Kosong"
+        );
+
+        return;
+    }
+
+    try {
+
+        await navigator.clipboard
+            .writeText(result);
+
+        showToast(
+            "Hasil berhasil disalin ke clipboard.",
+            "success",
+            "Copy Berhasil"
+        );
+
+    } catch (error) {
+
+        const textarea =
+            document.getElementById(
+                "obfuscatedResult"
+            );
+
+        textarea.focus();
+        textarea.select();
+
+        try {
+
+            document.execCommand("copy");
+
+            showToast(
+                "Hasil berhasil disalin.",
+                "success",
+                "Copy Berhasil"
+            );
+
+        } catch (err) {
+
+            showToast(
+                "Gagal menyalin hasil.",
+                "error",
+                "Copy Gagal"
+            );
+
+        }
+    }
+}
+
+
+/* DOWNLOAD RESULT */
+
+function downloadResult() {
+
+    const result =
+        document.getElementById(
+            "obfuscatedResult"
+        ).value.trim();
+
+    if (!result) {
+
+        showToast(
+            "Belum ada hasil untuk didownload.",
+            "warning",
+            "Hasil Kosong"
+        );
+
+        return;
+    }
+
+    const blob =
+        new Blob(
+            [result],
+            {
+                type:
+                    "text/plain;charset=utf-8"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "exry-obfuscated.lua";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+    showToast(
+        "File Lua berhasil didownload.",
+        "success",
+        "Download Berhasil"
+    );
+}
+
+
+/* VIDEO */
+
+function processVideo() {
+
+    const url =
+        document.getElementById(
+            "videoUrl"
+        ).value.trim();
+
+    if (!url) {
+
+        showToast(
+            "Masukkan URL video terlebih dahulu.",
+            "warning",
+            "URL Kosong"
+        );
+
+        return;
+    }
+
+    document.getElementById(
+        "videoPreview"
+    ).classList.add("show");
+
+    document.getElementById(
+        "videoPreviewText"
+    ).textContent =
+        "URL berhasil diterima: " + url;
+
+    showToast(
+        "URL berhasil diproses.",
+        "success",
+        "Video Ready"
+    );
+}
+
+
+function downloadVideoDemo() {
+
+    showToast(
+        "Downloader membutuhkan backend/API untuk mengambil file video.",
+        "info",
+        "Backend Diperlukan",
+        5000
+    );
+}
+
+
+/* AI DEMO */
+
+function generateAI() {
+
+    const type =
+        document.getElementById(
+            "aiType"
+        ).value;
+
+    const topic =
+        document.getElementById(
+            "aiTopic"
+        ).value.trim();
+
+    if (!topic) {
+
+        showToast(
+            "Masukkan topik terlebih dahulu.",
+            "warning",
+            "Topik Kosong"
+        );
+
+        return;
+    }
+
+    let result = "";
+
+    if (type === "caption") {
+
+        result =
+`🔥 ${topic}
+
+Tetap berkarya, tetap berkembang, dan jangan takut mencoba hal baru.
+
+#ExryHub #Gaming #Creator`;
+
+    }
+
+    else if (type === "bio") {
+
+        result =
+`⚡ ${topic}
+🎮 Creator & Digital Tools
+🚀 Build • Create • Share
+🛡️ Powered by Exry Hub`;
+
+    }
+
+    else if (type === "username") {
+
+        const names = [
+            "Exry" + topic,
+            topic + "X",
+            "Exry_" + topic,
+            "The" + topic,
+            topic + "Hub",
+            "X" + topic
+        ];
+
+        result =
+            names.join("\n");
+
+    }
+
+    else if (type === "prompt") {
+
+        result =
+`Buatkan konten profesional bertema "${topic}".
+
+Gaya:
+- Modern
+- Menarik
+- Singkat
+- Cocok untuk media sosial
+- Gunakan bahasa Indonesia yang natural`;
+
+    }
+
+    document.getElementById(
+        "aiResult"
+    ).textContent = result;
+
+    showToast(
+        "Konten berhasil dibuat.",
+        "success",
+        "AI Generated"
+    );
+}
+
+
+/* COPY AI */
+
+async function copyAI() {
+
+    const result =
+        document.getElementById(
+            "aiResult"
+        ).textContent;
+
+    if (
+        !result ||
+        result === "Hasil AI akan muncul di sini..."
+    ) {
+
+        showToast(
+            "Belum ada hasil AI.",
+            "warning",
+            "Hasil Kosong"
+        );
+
+        return;
+    }
+
+    try {
+
+        await navigator.clipboard
+            .writeText(result);
+
+        showToast(
+            "Hasil AI berhasil disalin.",
+            "success",
+            "Copy Berhasil"
+        );
+
+    } catch {
+
+        showToast(
+            "Gagal menyalin hasil.",
+            "error",
+            "Copy Gagal"
+        );
+    }
+}
+
+
+/* DOWNLOAD AI */
+
+function downloadAI() {
+
+    const result =
+        document.getElementById(
+            "aiResult"
+        ).textContent;
+
+    if (
+        !result ||
+        result === "Hasil AI akan muncul di sini..."
+    ) {
+
+        showToast(
+            "Belum ada hasil AI.",
+            "warning",
+            "Hasil Kosong"
+        );
+
+        return;
+    }
+
+    const blob =
+        new Blob(
+            [result],
+            {
+                type:
+                    "text/plain;charset=utf-8"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "exry-ai-result.txt";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+    showToast(
+        "Hasil AI berhasil didownload.",
+        "success",
+        "Download Berhasil"
+    );
+}
+
+</script>
+
+</body>
+</html>

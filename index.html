@@ -1100,6 +1100,69 @@
         }
 
         /* ============================================
+                   TIKTOK PREVIEW
+                   ============================================ */
+        .tiktok-preview {
+            margin: 12px 0 10px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-subtle);
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+        .tiktok-preview.show {
+            display: block;
+        }
+        .tiktok-preview video,
+        .tiktok-preview audio {
+            width: 100%;
+            display: block;
+            background: #000;
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            max-height: 320px;
+        }
+        .tiktok-preview .preview-info {
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tiktok-preview .preview-info .title {
+            font-weight: 700;
+            font-size: 12px;
+            color: #fff;
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .tiktok-preview .preview-info .title i {
+            color: var(--accent);
+            margin-right: 6px;
+        }
+        .tiktok-preview .preview-info .size {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tiktok-preview .preview-info .badge-type {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 30px;
+            background: rgba(99, 102, 241, 0.12);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.06);
+        }
+
+        /* ============================================
                    PLAYLIST OVERLAY
                    ============================================ */
         .playlist-overlay {
@@ -1493,6 +1556,9 @@
                 font-size: 10px;
                 padding: 4px 10px;
             }
+            .tiktok-preview video {
+                max-height: 200px;
+            }
         }
 
         @media (max-width: 400px) {
@@ -1536,6 +1602,9 @@
                 min-height: 130px;
                 font-size: 10px;
             }
+            .tiktok-preview video {
+                max-height: 160px;
+            }
         }
 
         /* ============================================
@@ -1559,6 +1628,22 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        /* spinner kecil */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -1702,21 +1787,35 @@
         </div>
     </div>
 
-    <!-- ====== TIKTOK DOWNLOAD MODAL ====== -->
+    <!-- ====== TIKTOK DOWNLOAD MODAL (DENGAN PREVIEW) ====== -->
     <div class="modal-overlay tiktok-modal" id="tiktokModal">
         <div class="modal-panel">
             <button class="close-btn" id="closeTiktokBtn"><i class="fas fa-times"></i></button>
             <div class="modal-title tiktok-title"><i class="fab fa-tiktok"></i> Download TikTok</div>
             <label>URL Video TikTok</label>
             <input type="url" id="tiktokUrl" placeholder="https://vt.tiktok.com/ZSV5BCu6B/" />
+
             <div class="btn-group">
-                <button class="btn btn--primary" id="tiktokVideoBtn"><i class="fas fa-video"></i> Video (No WM)</button>
-                <button class="btn btn--primary" id="tiktokAudioBtn"><i class="fas fa-music"></i> Audio (MP3)</button>
+                <button class="btn btn--primary" id="tiktokFetchBtn"><i class="fas fa-search"></i> Preview</button>
+                <button class="btn btn--ghost" id="clearTiktokBtn" style="flex:0.5;"><i class="fas fa-eraser"></i></button>
             </div>
-            <div style="margin-top: 6px; text-align: right;">
-                <button class="btn btn--ghost" id="clearTiktokBtn" style="font-size:10px; padding:4px 14px;"><i class="fas fa-eraser"></i> Bersihkan</button>
+
+            <!-- PREVIEW AREA -->
+            <div class="tiktok-preview" id="tiktokPreview">
+                <div id="previewMedia"></div>
+                <div class="preview-info">
+                    <span class="title" id="previewTitle"><i class="fas fa-film"></i> <span id="previewTitleText">Video</span></span>
+                    <span class="badge-type" id="previewBadge">Video</span>
+                    <span class="size" id="previewSize">-- MB</span>
+                </div>
             </div>
-            <div class="status" id="tiktokStatus">📥 Masukkan URL, lalu pilih Video atau Audio.</div>
+
+            <!-- TOMBOL DOWNLOAD (muncul setelah preview) -->
+            <div class="btn-group" id="tiktokDownloadGroup" style="display:none; margin-top:6px;">
+                <button class="btn btn--success" id="tiktokDownloadBtn"><i class="fas fa-download"></i> Download Sekarang</button>
+            </div>
+
+            <div class="status" id="tiktokStatus">📥 Masukkan URL, lalu klik Preview untuk melihat konten.</div>
         </div>
     </div>
 
@@ -1748,7 +1847,7 @@
                 <strong>🔒 Obfuscator</strong> – mengubah variabel, menyandikan string, menghapus komentar, dan merapikan spasi.<br />
                 <strong>📨 Spam Webhook</strong> – kirim pesan berulang ke webhook Discord target (untuk simulasi atau uji coba).<br />
                 <strong>🎵 Musik</strong> – daftar lagu favorit yang bisa diputar langsung di halaman.<br />
-                <strong>📱 Download TikTok</strong> – unduh video tanpa watermark dan audio (MP3) dari TikTok.
+                <strong>📱 Download TikTok</strong> – unduh video tanpa watermark dan audio (MP3) dengan preview terlebih dahulu.
             </p>
             <p>
                 <span class="highlight">Dibuat oleh TamaRyc</span> untuk komunitas Exry.
@@ -1777,7 +1876,7 @@
             </div>
             <div class="tutorial-item">
                 <h3><i class="fab fa-tiktok"></i> Download TikTok</h3>
-                <p>Masukkan URL video TikTok (bisa link pendek seperti vt.tiktok.com), lalu pilih tombol <strong>Video</strong> atau <strong>Audio</strong>. Unduhan akan langsung dimulai.</p>
+                <p>Masukkan URL video TikTok, klik <strong>Preview</strong> untuk melihat konten. Setelah preview muncul, klik <strong>Download Sekarang</strong> untuk mengunduh file langsung (bukan redirect ke CDN).</p>
             </div>
             <div class="tutorial-item">
                 <h3><i class="fas fa-music"></i> Musik &amp; List Lagu</h3>
@@ -2185,26 +2284,37 @@
         })();
 
         // ============================================================
-        //  TIKTOK DOWNLOAD
+        //  TIKTOK DOWNLOAD DENGAN PREVIEW + DOWNLOAD LANGSUNG (BUKAN REDIRECT)
         // ============================================================
         (function() {
             const tiktokModal = document.getElementById('tiktokModal');
             const closeTiktokBtn = document.getElementById('closeTiktokBtn');
             const tiktokBtn = document.getElementById('tiktokBtn');
             const tiktokUrl = document.getElementById('tiktokUrl');
-            const tiktokVideoBtn = document.getElementById('tiktokVideoBtn');
-            const tiktokAudioBtn = document.getElementById('tiktokAudioBtn');
+            const tiktokFetchBtn = document.getElementById('tiktokFetchBtn');
             const clearTiktokBtn = document.getElementById('clearTiktokBtn');
             const tiktokStatus = document.getElementById('tiktokStatus');
+
+            const previewContainer = document.getElementById('tiktokPreview');
+            const previewMedia = document.getElementById('previewMedia');
+            const previewTitleText = document.getElementById('previewTitleText');
+            const previewBadge = document.getElementById('previewBadge');
+            const previewSize = document.getElementById('previewSize');
+            const downloadGroup = document.getElementById('tiktokDownloadGroup');
+            const downloadBtn = document.getElementById('tiktokDownloadBtn');
+
+            let currentData = null; // menyimpan data dari API
 
             tiktokBtn.addEventListener('click', function() {
                 tiktokModal.classList.add('open');
                 document.body.style.overflow = 'hidden';
+                resetPreview();
             });
 
             function closeTiktok() {
                 tiktokModal.classList.remove('open');
                 document.body.style.overflow = '';
+                resetPreview();
             }
             closeTiktokBtn.addEventListener('click', closeTiktok);
             tiktokModal.addEventListener('click', function(e) { if (e.target === this) closeTiktok(); });
@@ -2213,11 +2323,23 @@
 
             clearTiktokBtn.addEventListener('click', function() {
                 tiktokUrl.value = '';
-                tiktokStatus.textContent = '📥 Masukkan URL, lalu pilih Video atau Audio.';
+                resetPreview();
+                tiktokStatus.textContent = '📥 Masukkan URL, lalu klik Preview untuk melihat konten.';
                 tiktokStatus.className = 'status';
             });
 
-            async function downloadTikTok(type) {
+            function resetPreview() {
+                previewContainer.classList.remove('show');
+                previewMedia.innerHTML = '';
+                downloadGroup.style.display = 'none';
+                currentData = null;
+                previewTitleText.textContent = 'Video';
+                previewBadge.textContent = 'Video';
+                previewSize.textContent = '-- MB';
+            }
+
+            // ====== PREVIEW ======
+            tiktokFetchBtn.addEventListener('click', async function() {
                 const url = tiktokUrl.value.trim();
                 if (!url) {
                     tiktokStatus.textContent = '❌ Masukkan URL TikTok.';
@@ -2225,10 +2347,11 @@
                     return;
                 }
 
-                const btn = type === 'video' ? tiktokVideoBtn : tiktokAudioBtn;
-                btn.disabled = true;
-                tiktokStatus.textContent = '⏳ Mengambil data...';
+                tiktokFetchBtn.disabled = true;
+                tiktokFetchBtn.innerHTML = '<span class="spinner"></span> Loading...';
+                tiktokStatus.textContent = '⏳ Mengambil data dari TikTok...';
                 tiktokStatus.className = 'status loading';
+                resetPreview();
 
                 try {
                     const response = await fetch('/api/download', {
@@ -2242,42 +2365,141 @@
                         throw new Error(data.error || 'Gagal mengambil data');
                     }
 
-                    let downloadUrl = null;
-                    let fileName = '';
+                    // Cek ketersediaan video/audio
+                    const videoUrl = data.play || data.wmplay;
+                    const audioUrl = data.music;
 
-                    if (type === 'video') {
-                        downloadUrl = data.play || data.wmplay;
-                        fileName = 'tiktok_video.mp4';
-                    } else {
-                        downloadUrl = data.music;
-                        fileName = 'tiktok_audio.mp3';
+                    if (!videoUrl && !audioUrl) {
+                        throw new Error('Tidak ditemukan video atau audio yang tersedia.');
                     }
 
-                    if (!downloadUrl) {
-                        throw new Error(`Link ${type} tidak ditemukan`);
+                    currentData = data;
+
+                    // Tampilkan preview
+                    let mediaHtml = '';
+                    let type = 'Video';
+                    let badge = 'Video';
+                    let sizeText = '-- MB';
+
+                    // Prioritaskan video (no watermark)
+                    if (videoUrl) {
+                        mediaHtml =
+                            `<video controls autoplay playsinline src="${videoUrl}" preload="metadata"></video>`;
+                        type = 'Video (No Watermark)';
+                        badge = '🎬 Video';
+                        // estimasi size (jika ada)
+                        if (data.size) sizeText = (data.size / 1024 / 1024).toFixed(2) + ' MB';
+                        else sizeText = '~ ' + (await estimateSize(videoUrl)) + ' MB';
+                    } else if (audioUrl) {
+                        mediaHtml =
+                        `<audio controls autoplay src="${audioUrl}" preload="metadata"></audio>`;
+                        type = 'Audio (MP3)';
+                        badge = '🎵 Audio';
+                        if (data.size) sizeText = (data.size / 1024 / 1024).toFixed(2) + ' MB';
+                        else sizeText = '~ ' + (await estimateSize(audioUrl)) + ' MB';
                     }
 
-                    const a = document.createElement('a');
-                    a.href = downloadUrl;
-                    a.download = fileName;
-                    a.target = '_blank';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
+                    previewMedia.innerHTML = mediaHtml;
+                    previewTitleText.textContent = data.title || 'TikTok';
+                    previewBadge.textContent = badge;
+                    previewSize.textContent = sizeText;
+                    previewContainer.classList.add('show');
+                    downloadGroup.style.display = 'flex';
 
-                    tiktokStatus.textContent = `✅ ${type === 'video' ? 'Video' : 'Audio'} berhasil diunduh!`;
+                    tiktokStatus.textContent =
+                    `✅ Preview siap! Klik "Download Sekarang" untuk mengunduh ${type}.`;
                     tiktokStatus.className = 'status success';
+
                 } catch (err) {
                     tiktokStatus.textContent = `❌ ${err.message}`;
                     tiktokStatus.className = 'status error';
                     console.error(err);
+                    resetPreview();
                 } finally {
-                    btn.disabled = false;
+                    tiktokFetchBtn.disabled = false;
+                    tiktokFetchBtn.innerHTML = '<i class="fas fa-search"></i> Preview';
+                }
+            });
+
+            // ====== ESTIMASI SIZE (HEADER) ======
+            async function estimateSize(url) {
+                try {
+                    const head = await fetch(url, { method: 'HEAD' });
+                    const len = head.headers.get('content-length');
+                    if (len) {
+                        const mb = parseInt(len) / 1024 / 1024;
+                        return mb.toFixed(2);
+                    }
+                    return '?';
+                } catch {
+                    return '?';
                 }
             }
 
-            tiktokVideoBtn.addEventListener('click', () => downloadTikTok('video'));
-            tiktokAudioBtn.addEventListener('click', () => downloadTikTok('audio'));
+            // ====== DOWNLOAD LANGSUNG (BUKAN REDIRECT KE CDN) ======
+            downloadBtn.addEventListener('click', async function() {
+                if (!currentData) {
+                    tiktokStatus.textContent = '❌ Tidak ada data. Klik Preview terlebih dahulu.';
+                    tiktokStatus.className = 'status error';
+                    return;
+                }
+
+                const videoUrl = currentData.play || currentData.wmplay;
+                const audioUrl = currentData.music;
+                let downloadUrl = null;
+                let fileName = 'tiktok_video.mp4';
+                let typeLabel = 'Video';
+
+                if (videoUrl) {
+                    downloadUrl = videoUrl;
+                    fileName = 'tiktok_video.mp4';
+                    typeLabel = 'Video';
+                } else if (audioUrl) {
+                    downloadUrl = audioUrl;
+                    fileName = 'tiktok_audio.mp3';
+                    typeLabel = 'Audio';
+                } else {
+                    tiktokStatus.textContent = '❌ Tidak ada link download yang tersedia.';
+                    tiktokStatus.className = 'status error';
+                    return;
+                }
+
+                downloadBtn.disabled = true;
+                downloadBtn.innerHTML = '<span class="spinner"></span> Mengunduh...';
+                tiktokStatus.textContent = `⏳ Mengunduh ${typeLabel}... (jangan tutup halaman)`;
+                tiktokStatus.className = 'status loading';
+
+                try {
+                    // Fetch file sebagai blob
+                    const response = await fetch(downloadUrl);
+                    if (!response.ok) throw new Error('Gagal mengunduh file dari server.');
+
+                    const blob = await response.blob();
+                    const blobUrl = URL.createObjectURL(blob);
+
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+
+                    tiktokStatus.textContent =
+                    `✅ ${typeLabel} berhasil diunduh! (${(blob.size / 1024 / 1024).toFixed(2)} MB)`;
+                    tiktokStatus.className = 'status success';
+
+                } catch (err) {
+                    tiktokStatus.textContent = `❌ Gagal mengunduh: ${err.message}`;
+                    tiktokStatus.className = 'status error';
+                    console.error(err);
+                } finally {
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Sekarang';
+                }
+            });
+
         })();
 
         // ============================================================
